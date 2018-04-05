@@ -4,12 +4,13 @@
 #include <math.h>
 #include <stdbool.h>
 #include <unistd.h>
+#include <string.h>
 
 #define MAX_NODE_SIZE 10000
 /*
     Random Matrix Generator
 
-    @author   Chris Moriano
+    @author   Chris Moriano, Shaheer Haroon
     @version  0.0.0.1 (Super Alpha)
 
     This program will generate a random matrix to a text file using the
@@ -27,8 +28,8 @@
     Remaining lines: the matrix
 
     options:
-    -f <string>: Custom output filename @Shaheer Haroon
-    -w <int>: maximum weight of edge, default is 1 (all edge weights are ints) @Shaheer Haroon
+    -f <string>: Custom output filename
+    -w <int>: maximum weight of edge, default is 1 (all edge weights are ints)
     -s <int>: custom size of matrix, default is 10
     -p <int>: probaility that all node A->B has an edge, default 50
     -d <optional 0>: if this option is 0 we generate an undirectional graph with no self edges
@@ -37,7 +38,7 @@
 
 
 
-char* file_name = "rand_m_out.txt";
+char* file_name = NULL;
 int matrix_size = -1, probability = -1;
 int max_weight = 1;
 bool verbose = false, dag = true;
@@ -48,6 +49,7 @@ void get_options(int argc, char* argv[]){
     while((c = getopt(argc, argv, "s:p:f:vd:w:")) != -1){
         switch(c){
             case 'f':
+                file_name = malloc(sizeof(optarg));
                 file_name = optarg;
                 break;
             case 'w':
@@ -82,6 +84,10 @@ void get_options(int argc, char* argv[]){
                 verbose = true;
                 break;
         }
+    }
+    if(file_name == NULL){
+        file_name = malloc(sizeof("rand_m_out.txt"));
+        strcpy(file_name, "rand_m_out.txt");
     }
 }
 
@@ -123,7 +129,6 @@ int main(int argc, char *argv[]){
                 } else {
                     matrix[i][j] = 0;
                 }
-
             }
         }
     } else {
@@ -166,6 +171,11 @@ int main(int argc, char *argv[]){
             printf("\n");
         }
     }
+
+    fclose(fp);
+    free(file_name);
+    free(matrix[0]);
+    free(matrix);
 
     return EXIT_SUCCESS;
 
