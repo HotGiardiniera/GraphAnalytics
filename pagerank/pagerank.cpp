@@ -64,7 +64,7 @@ int main(int argc, char *argv[]){
     }
 
     // iterate calculate our ranks
-    int iteration_count = 100;
+    int iteration_count = 100;  //TODO find a better value
     float running_rank_sum;
 
     while(iteration_count > 0){
