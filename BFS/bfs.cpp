@@ -40,7 +40,7 @@ int main(int argc, char *argv[]){
     std::vector<Vertex *> temp;
 
 
-    // Generic Matrix reader (inneficient for our DAG so we will ignore this in timings) 
+    // Generic Matrix reader (inneficient for our DAG so we will ignore this in timings) We can row Minor this for more cache hits
     for(int i=0; i<m_size; i++){
         G[i].name = i;
         for(int j=0; j<m_size; j++){
@@ -52,6 +52,10 @@ int main(int argc, char *argv[]){
             }
         }
     }
+
+    fclose(file_pointer);
+    delete [] matrix[0];
+    delete [] matrix;
 
     for(int i=0; i<m_size; i++){
         if(G[i].indegree == 0){
