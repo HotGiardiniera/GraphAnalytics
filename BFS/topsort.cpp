@@ -33,9 +33,6 @@ int main(int argc, char *argv[]){
         }
     }
 
-    // ------------- TODO ---------------
-    // Use the CLRS BFS with 0 as our starting matrix NOTE: our ltgen will need an option to make the first node our source 
-
     // Data structures for our top sort
     std::vector<Vertex> G(m_size);
     std::map<uint32_t, std::vector<Vertex *> > adjacency_hash;

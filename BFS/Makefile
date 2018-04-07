@@ -2,7 +2,10 @@ CFLAGS=-Wall -Wpedantic
 CC=g++
 
 bfs:
-	 $(CC) $(CFLAGS) bfs.cpp Vertex.cpp -o bfs
+	$(CC) $(CFLAGS) bfs.cpp Vertex.cpp -o bfs
+
+topsort:
+	$(CC) $(CFLAGS) topsort.cpp Vertex.cpp -o topsort
 
 clean:
 	rm -rf bfs;
