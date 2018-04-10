@@ -46,7 +46,7 @@ bool verbose = false, dag = true;
 void get_options(int argc, char* argv[]){
     char c;
     int temp_size, temp_prob;
-    while((c = getopt(argc, argv, "s:p:f:vd:w:")) != -1){
+    while((c = getopt(argc, argv, "s:p:f:vd:w:b")) != -1){
         switch(c){
             case 'f':
                 file_name = malloc(sizeof(optarg));

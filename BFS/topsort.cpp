@@ -36,7 +36,7 @@ int main(int argc, char *argv[]){
     // Data structures for our top sort
     std::vector<Vertex> G(m_size);
     std::map<uint32_t, std::vector<Vertex *> > adjacency_hash;
-    std::queue<int> Ready;
+    std::queue<uint32_t> Ready;
     std::vector<Vertex *> temp;
 
 

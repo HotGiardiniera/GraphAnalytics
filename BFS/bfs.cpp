@@ -39,11 +39,13 @@ int main(int argc, char *argv[]){
     // Data structures for our top sort
     std::vector<Vertex> G(m_size);
     std::map<uint32_t, std::vector<Vertex *> > adjacency_hash;
-    std::queue<int> Ready;
+    std::queue<uint32_t> Ready;
     std::vector<Vertex *> temp;
+    std::vector<Vertex *> dist(m_size);
+    std::vector<Vertex *> parent(m_size);
 
 
-    // Generic Matrix reader (inneficient for our DAG so we will ignore this in timings) We can row Minor this for more cache hits
+    // Generic Matrix reader
     for(int i=0; i<m_size; i++){
         G[i].name = i;
         for(int j=0; j<m_size; j++){
@@ -60,28 +62,34 @@ int main(int argc, char *argv[]){
     delete [] matrix[0];
     delete [] matrix;
 
-    for(int i=0; i<m_size; i++){
-        if(G[i].indegree == 0){
-            Ready.push(i);
-        }
-    }
+    Vertex *src = &G[0];
+    src->colour = GREY;
+    Ready.push(0);  // This is our source
+    dist[0] = 0;
+
+
 
     uint32_t vertex_location;
 
     while(!Ready.empty()){
         vertex_location = Ready.front();
         Ready.pop();
-        printf("Vertex: %d\n", G[vertex_location].name);
 
         temp = adjacency_hash[vertex_location];
 
         for(size_t i=0; i<temp.size(); i++){
-            temp[i]->indegree -= 1;
-            if(temp[i]->indegree == 0){
+            printf(".");
+            if(temp[i]->colour == WHITE){
+                dist[temp[i]->name] = dist[vertex_location] + 1;
+                parent[temp[i]->name] = &G[vertex_location];
+                temp[i]->colour = GREY;
                 Ready.push(temp[i]->name);
+                printf("\b");
             }
         }
+        G[vertex_location].colour = BLACK;
     }
+    printf("Done Searching!\n");
 
     return 0;
 }

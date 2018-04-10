@@ -8,4 +8,4 @@ topsort:
 	$(CC) $(CFLAGS) topsort.cpp Vertex.cpp -o topsort
 
 clean:
-	rm -rf bfs;
+	rm -rf bfs; rm -rf topsort;
