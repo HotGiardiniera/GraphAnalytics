@@ -6,7 +6,7 @@
 #include <unistd.h>
 #include <string.h>
 
-#define MAX_NODE_SIZE 10000
+#define MAX_NODE_SIZE 30000
 /*
     Random Matrix Generator
 

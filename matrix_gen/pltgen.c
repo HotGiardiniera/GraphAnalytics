@@ -4,6 +4,7 @@
 #include <math.h>
 #include <stdbool.h>
 #include <unistd.h>
+#include <omp.h>
 
 #define MAX_NODE_SIZE 10000
 #define MAX_THREAD_COUNT 64
@@ -42,7 +43,7 @@
 char* file_name = "rand_m_out.txt";
 int matrix_size = -1, probability = -1;
 int max_weight = 1;
-int num_threads = 1;
+int thread_count = 1;
 bool verbose = false, dag = true;
 
 void get_options(int argc, char* argv[]){
@@ -61,8 +62,8 @@ void get_options(int argc, char* argv[]){
                 }
                 break;
             case 't':
-                num_threads = atoi(optarg);
-                if(num_threads < 1 || num_threads > MAX_THREAD_COUNT){
+                thread_count = atoi(optarg);
+                if(thread_count < 1 || thread_count > MAX_THREAD_COUNT){
                     printf("Number of threads specified must be greater than 0 and smaller than %d\n", MAX_THREAD_COUNT);
                     exit(EXIT_FAILURE);
                 }
@@ -127,9 +128,10 @@ int main(int argc, char *argv[]){
     }
 
     if(dag){
-      #pragma omp parallel for num_threads(num_threads)
+      #pragma omp parallel num_threads(thread_count)
       {
         for(i=0; i<matrix_size; i++){
+            #pragma omp for
             for(j=0; j<i; j++){
                 rand_num = rand() % 100;
                 if(rand_num < probability){
@@ -142,8 +144,9 @@ int main(int argc, char *argv[]){
         }
       }
     } else {
-      #pragma omp parallel for num_threads(numThreads)
+      #pragma omp parallel num_threads(thread_count)
       {
+        #pragma omp for
         for(i=0; i<matrix_size; i++){
             for(j=0; j<matrix_size; j++){
                 if(i == j){

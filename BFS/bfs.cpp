@@ -3,7 +3,10 @@
 #include <map>
 #include <vector>
 #include <queue>
+#include <assert.h>
 #include "Vertex.h"
+#include <unistd.h>
+#include <sys/time.h>
 
 
 int main(int argc, char *argv[]){
@@ -33,9 +36,6 @@ int main(int argc, char *argv[]){
         }
     }
 
-    // ------------- TODO ---------------
-    // Use the CLRS BFS with 0 as our starting matrix NOTE: our ltgen will need an option to make the first node our source 
-
     // Data structures for our top sort
     std::vector<Vertex> G(m_size);
     std::map<uint32_t, std::vector<Vertex *> > adjacency_hash;
@@ -44,7 +44,7 @@ int main(int argc, char *argv[]){
     std::vector<Vertex *> dist(m_size);
     std::vector<Vertex *> parent(m_size);
 
-
+    printf("Reading Matrix\n");
     // Generic Matrix reader
     for(int i=0; i<m_size; i++){
         G[i].name = i;
@@ -67,7 +67,11 @@ int main(int argc, char *argv[]){
     Ready.push(0);  // This is our source
     dist[0] = 0;
 
+    struct timeval start, end;
+    long mtime, secs, usecs; 
 
+    printf("Starting BFS\n");
+    gettimeofday(&start, NULL);
 
     uint32_t vertex_location;
 
@@ -78,18 +82,28 @@ int main(int argc, char *argv[]){
         temp = adjacency_hash[vertex_location];
 
         for(size_t i=0; i<temp.size(); i++){
-            printf(".");
             if(temp[i]->colour == WHITE){
                 dist[temp[i]->name] = dist[vertex_location] + 1;
                 parent[temp[i]->name] = &G[vertex_location];
                 temp[i]->colour = GREY;
                 Ready.push(temp[i]->name);
-                printf("\b");
             }
         }
         G[vertex_location].colour = BLACK;
     }
+
+    gettimeofday(&end, NULL);
+    secs  = end.tv_sec  - start.tv_sec;
+    usecs = end.tv_usec - start.tv_usec;
+    mtime = ((secs) * 1000 + usecs/1000.0) + 0.5;
+    printf("Elapsed BFS time: %ld millisecs\n", usecs);
+
     printf("Done Searching!\n");
+
+    printf("Verifying Graph\n");
+    for(int i=0; i<m_size; i++){
+        assert(G[i].colour == BLACK);
+    }
 
     return 0;
 }
